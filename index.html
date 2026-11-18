@@ -1,143 +1,215 @@
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>کارگەی چەرەزاتی دیمەن | Enterprise ERP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کارگەی چەرەزاتی دیمەن | Global ERP & GIS</title>
 <link rel="stylesheet" href="https://unpkg.com"/>
 <link href="https://googleapis.com" rel="stylesheet">
 <style>
-:root{--p:#064e3b;--pd:#022c22;--pl:#047857;--gold:#d97706;--goldl:#fef3c7;--bg:#f8fafc;--card:#ffffff;--txt:#0f172a;--muted:#64748b;--red:#dc2626;--green:#16a34a;--border:#e2e8f0}
+:root{
+  --primary:#064e3b;
+  --primary-dark:#022c22;
+  --primary-light:#059669;
+  --gold:#d97706;
+  --gold-soft:#fef3c7;
+  --bg:#f1f5f9;
+  --surface:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --danger:#ef4444;
+  --success:#10b981;
+  --shadow:0 4px 20px -2px rgba(15,23,42,0.06);
+}
 *{box-sizing:border-box;font-family:'Vazirmatn',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);padding-bottom:80px}
-header{background:linear-gradient(135deg,var(--pd),var(--p));color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-.brand{display:flex;align-items:center;gap:10px}
-.logo-badge{background:var(--gold);color:#fff;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem}
-.container{max-width:1000px;margin:18px auto;padding:0 15px}
-#login-screen{max-width:380px;margin:80px auto;background:var(--card);padding:35px 25px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);text-align:center;border-top:5px solid var(--gold)}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
-.stat-card{background:var(--card);padding:16px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--border);position:relative;overflow:hidden}
-.stat-card::after{content:'';position:absolute;bottom:0;right:0;width:100%;height:4px;background:var(--p)}
-.stat-card.s-green::after{background:var(--green)}
-.stat-card.s-red::after{background:var(--red)}
-.stat-card.s-gold::after{background:var(--gold)}
-.stat-card small{color:var(--muted);font-size:.8rem;font-weight:600}
-.stat-card h2{font-size:1.35rem;margin-top:6px;font-weight:800}
-.card{background:var(--card);padding:20px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.04);border:1px solid var(--border);margin-bottom:16px}
-.card-title{color:var(--p);font-size:1.05rem;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+body{background:var(--bg);color:var(--text);padding-bottom:80px}
+
+/* Login Screen */
+#login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at top right,#064e3b,#022c22);padding:20px
+}
+.login-card{
+  background:var(--surface);width:100%;max-width:400px;padding:40px 30px;
+  border-radius:24px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);text-align:center
+}
+.brand-emblem{
+  width:64px;height:64px;margin:0 auto 16px;border-radius:18px;
+  background:linear-gradient(135deg,var(--gold),#f59e0b);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;
+  box-shadow:0 10px 20px rgba(217,119,6,0.3)
+}
+
+/* Top Navigation */
+header{
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:14px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:1000
+}
+.header-brand{display:flex;align-items:center;gap:12px}
+.header-logo{
+  width:40px;height:40px;border-radius:12px;background:var(--primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem
+}
+.desktop-tabs{display:flex;gap:8px}
+@media(max-width:768px){.desktop-tabs{display:none}}
+.d-tab{
+  padding:8px 16px;border-radius:10px;border:none;background:transparent;
+  color:var(--muted);font-weight:600;font-size:.9rem;cursor:pointer;transition:.2s
+}
+.d-tab.active{background:var(--primary);color:#fff}
+
+/* Layout & Cards */
+.container{max-width:1200px;margin:24px auto;padding:0 16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:850px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{
+  background:var(--surface);padding:20px;border-radius:16px;border:1px solid var(--border);
+  box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between
+}
+.kpi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.kpi-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.kpi-val{font-size:1.5rem;font-weight:800;color:var(--text)}
+.kpi-label{font-size:.82rem;color:var(--muted);font-weight:500}
+
+.workspace-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px}
+@media(max-width:950px){.workspace-grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--surface);padding:22px;border-radius:18px;border:1px solid var(--border);
+  box-shadow:var(--shadow);margin-bottom:20px
+}
+.card-header{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)
+}
+.card-title{font-size:1.05rem;font-weight:700;color:var(--primary-dark);display:flex;align-items:center;gap:8px}
+
+/* Map Controls */
+.map-search-bar{display:flex;gap:8px;margin-bottom:12px}
+#map{height:380px;width:100%;border-radius:14px;z-index:1;border:1px solid var(--border)}
+.map-footer{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  margin-top:10px;font-size:.82rem;color:var(--muted);background:#f8fafc;padding:8px 12px;border-radius:10px
+}
+
+/* Forms & Buttons */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-label{display:block;font-size:.82rem;font-weight:700;margin-bottom:4px;color:#334155}
-input,select{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:.95rem;background:#fff;transition:.2s}
-input:focus,select:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(6,78,59,.1)}
-.btn{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn:hover{background:var(--pl)}
-.btn-gold{background:var(--gold)}
+@media(max-width:550px){.form-grid{grid-template-columns:1fr}}
+label{display:block;font-size:.82rem;font-weight:600;margin-bottom:5px;color:#334155}
+input,select{
+  width:100%;padding:11px 14px;border:1px solid #cbd5e1;border-radius:10px;
+  font-size:.92rem;background:#fff;transition:.2s
+}
+input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(6,78,59,0.12)}
+
+.btn{
+  padding:11px 18px;border:none;border-radius:10px;font-weight:700;font-size:.9rem;
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:6px
+}
+.btn-primary{background:var(--primary);color:#fff;width:100%}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-gold{background:var(--gold);color:#fff}
 .btn-gold:hover{background:#b45309}
-.btn-outline{background:#fff;color:var(--p);border:1px solid var(--p);padding:7px 12px;font-size:.82rem;width:auto}
-#map{height:320px;width:100%;border-radius:12px;z-index:1;border:1px solid var(--border);margin:10px 0}
-.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:1000;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
-.nav-item{border:none;background:none;color:var(--muted);font-size:.75rem;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px}
-.nav-item.active{color:var(--p)}
-.nav-item span{font-size:1.25rem}
-.filter-pills{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
-.pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
-.pill.active{background:var(--p);color:#fff;border-color:var(--p)}
-.sale-card{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;border-right:5px solid var(--green);transition:.2s}
-.sale-card.unpaid{border-right-color:var(--red)}
-.sale-card.overdue{background:#fef2f2;border-color:#fecaca}
-.badge{padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
-.b-paid{background:#dcfce7;color:#15803d}
-.b-unpaid{background:#fee2e2;color:#b91c1c}
-.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
-.act-btn{padding:6px 10px;border-radius:6px;border:none;font-size:.78rem;font-weight:700;color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
-.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid var(--border)}
+.btn-soft{background:#f1f5f9;color:var(--text);border:1px solid var(--border)}
+.btn-soft:hover{background:#e2e8f0}
+
+/* Records & Badges */
+.pills{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.pill{
+  padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap
+}
+.pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.record-card{
+  border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;
+  background:#fff;border-right:5px solid var(--success);transition:.2s
+}
+.record-card:hover{box-shadow:0 6px 15px rgba(0,0,0,0.05)}
+.record-card.unpaid{border-right-color:var(--danger)}
+.record-card.overdue{background:#fef2f2;border-color:#fecaca}
+.badge{padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+.b-green{background:#dcfce7;color:#15803d}
+.b-red{background:#fee2e2;color:#b91c1c}
+.action-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)}
+.act-btn{
+  padding:7px 12px;border-radius:8px;border:none;font-size:.8rem;font-weight:600;
+  color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px
+}
+
+/* Mobile Bottom Nav */
+.mobile-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;
+  border-top:1px solid var(--border);padding:8px 0;z-index:1000;justify-content:space-around
+}
+@media(max-width:768px){.mobile-nav{display:flex}}
+.m-tab{border:none;background:none;color:var(--muted);font-size:.75rem;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+.m-tab.active{color:var(--primary)}
+.m-tab span{font-size:1.2rem}
 .hidden{display:none!important}
 </style>
 </head>
 <body>
 
+<!-- شاشەی چوونەژوورەوە -->
 <div id="login-screen">
-  <div class="logo-badge" style="margin:0 auto 12px;width:50px;height:50px;font-size:1.5rem">د</div>
-  <h2 style="color:var(--p);margin-bottom:6px">کارگەی چەرەزاتی دیمەن</h2>
-  <p style="color:var(--muted);font-size:.85rem;margin-bottom:20px">سیستەمی نێودەوڵەتی بەڕێوەبردنی فرۆش و کۆگا</p>
-  <input type="password" id="pin-input" placeholder="کۆدی چوونەژوورەوە (1234)" style="text-align:center;font-size:1.2rem;letter-spacing:4px;margin-bottom:12px">
-  <button class="btn" onclick="login()">چوونەژوورەوە بۆ سیستەم</button>
+  <div class="login-card">
+    <div class="brand-emblem">د</div>
+    <h2 style="color:var(--primary-dark);font-size:1.4rem;margin-bottom:6px">کارگەی چەرەزاتی دیمەن</h2>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:24px">سیستەمی نێودەوڵەتی دابەشکردن، خەریتە و حسابات</p>
+    <input type="password" id="pin-code" placeholder="کۆدی چوونەژوورەوە (1234)" style="text-align:center;font-size:1.3rem;letter-spacing:6px;margin-bottom:14px">
+    <button class="btn btn-primary" onclick="unlockSystem()">چوونەژوورەوە بۆ سیستەم</button>
+  </div>
 </div>
 
-<div id="main-system" class="hidden">
+<!-- شاشەی سەرەکی سیستەم -->
+<div id="app-shell" class="hidden">
   <header>
-    <div class="brand">
-      <div class="logo-badge">د</div>
+    <div class="header-brand">
+      <div class="header-logo">د</div>
       <div>
-        <h1 style="font-size:1.05rem;font-weight:800">کارگەی چەرەزاتی دیمەن</h1>
-        <small style="font-size:.72rem;opacity:.85">Enterprise Sales & GIS System</small>
+        <div style="font-weight:800;font-size:1.05rem;color:var(--primary-dark)">کارگەی چەرەزاتی دیمەن</div>
+        <div style="font-size:.75rem;color:var(--muted)">Enterprise Distribution & GIS</div>
       </div>
     </div>
-    <button onclick="location.reload()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:.8rem;cursor:pointer">🔒 قوفڵدان</button>
+    <div class="desktop-tabs">
+      <button class="d-tab active" onclick="openTab('pos',this)">📍 نەخشە و فرۆشتن</button>
+      <button class="d-tab" onclick="openTab('ledger',this)">📑 تۆماری حسابات</button>
+      <button class="d-tab" onclick="openTab('stock',this)">📦 بەڕێوەبردنی کۆگا</button>
+    </div>
+    <button class="btn btn-soft" style="padding:7px 14px;font-size:.82rem" onclick="location.reload()">🔒 قوفڵدان</button>
   </header>
 
   <div class="container">
-    <!-- بەشی ١: داشبۆرد و فرۆش -->
-    <div id="tab-sales" class="tab-content">
-      <div class="stats-grid">
-        <div class="stat-card"><small>کۆی مامەڵەکان</small><h2 id="st-count">0</h2></div>
-        <div class="stat-card s-green"><small>کۆی واسڵکراو</small><h2 id="st-paid" style="color:var(--green)">0</h2></div>
-        <div class="stat-card s-red"><small>قەرز (غەیرە واسڵ)</small><h2 id="st-unpaid" style="color:var(--red)">0</h2></div>
-        <div class="stat-card s-gold"><small>کاڵای ناو کۆگا (کیلۆ)</small><h2 id="st-stock" style="color:var(--gold)">0</h2></div>
+    <!-- ئامارە سەرەکییەکان (KPIs) -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-top"><span class="kpi-label">کۆی پسوڵەکان</span><div class="kpi-icon" style="background:#e0f2fe;color:#0284c7">🧾</div></div>
+        <div class="kpi-val" id="kpi-count">0</div>
       </div>
-
-      <div class="card">
-        <div class="card-title">
-          <span>📍 خەریتەی عێراق و دیاریکردنی شوێنی کڕیار</span>
-          <button type="button" class="btn btn-gold" style="width:auto;padding:6px 12px;font-size:.8rem" onclick="getGPS()">شوێنی ئێستام (GPS)</button>
-        </div>
-        <div id="map"></div>
-        <small id="loc-status" style="color:var(--muted)">کلیک لەسەر نەخشەکە بکە بۆ دانانی نیشانەی کڕیار (سەوز: واسڵ | سوور: قەرز)</small>
+      <div class="kpi-card">
+        <div class="kpi-top"><span class="kpi-label">کۆی پارەی واسڵکراو</span><div class="kpi-icon" style="background:#dcfce7;color:#16a34a">💰</div></div>
+        <div class="kpi-val" id="kpi-paid" style="color:var(--success)">0</div>
       </div>
-
-      <div class="card">
-        <div class="card-title"><span>📝 تۆمارکردنی پسوڵەی فرۆشی نوێ</span></div>
-        <form onsubmit="addSale(event)">
-          <div class="form-grid">
-            <div><label>ناوی کڕیار / مارکێت</label><input id="c-name" required placeholder="نموونە: مارکێتی شەهیدان"></div>
-            <div><label>ژمارە مۆبایل (واتسئەپ)</label><input id="c-phone" type="tel" required placeholder="0750..."></div>
-            <div>
-              <label>پارێزگا</label>
-              <select id="c-city">
-                <option>هەولێر</option><option>سلێمانی</option><option>دهۆک</option><option>کەرکوک</option><option>هەڵەبجە</option>
-                <option>بەغدا</option><option>موسڵ</option><option>بەسرە</option><option>ئەنبار</option><option>دیالە</option>
-                <option>سەڵاحەدین</option><option>نەجەف</option><option>کەربەلا</option><option>بابل</option><option>واست</option>
-                <option>میسان</option><option>زیقار</option><option>موسەننا</option><option>دیوانیە</option>
-              </select>
-            </div>
-            <div>
-              <label>هەڵبژاردنی بەرهەم لە کۆگا</label>
-              <select id="s-product" onchange="calcTotal()"></select>
-            </div>
-            <div><label>بڕ (کیلۆ / کارتۆن)</label><input id="s-qty" type="number" step="0.5" value="1" oninput="calcTotal()" required></div>
-            <div><label>کۆی گشتی پارە</label><input id="s-amount" type="number" required></div>
-            <div>
-              <label>دۆخی پارەدان</label>
-              <select id="s-status" onchange="toggleDue()">
-                <option value="واسڵ">واسڵ (نەقد)</option>
-                <option value="غەیرە واسڵ">غەیرە واسڵ (قەرز)</option>
-              </select>
-            </div>
-            <div id="due-box" class="hidden"><label>بەرواری دانەوەی قەرز</label><input id="s-due" type="date"></div>
-          </div>
-          <button type="submit" class="btn" style="margin-top:14px">💾 تۆمارکردن و دەرکردنی پسوڵە</button>
-        </form>
+      <div class="kpi-card">
+        <div class="kpi-top"><span class="kpi-label">کۆی قەرز (غەیرە واسڵ)</span><div class="kpi-icon" style="background:#fee2e2;color:#dc2626">⏳</div></div>
+        <div class="kpi-val" id="kpi-unpaid" style="color:var(--danger)">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-top"><span class="kpi-label">کاڵای بەردەست (کیلۆ)</span><div class="kpi-icon" style="background:#fef3c7;color:#d97706">📦</div></div>
+        <div class="kpi-val" id="kpi-stock" style="color:var(--gold)">0</div>
       </div>
     </div>
 
-    <!-- بەشی ٢: لیستی حسابات و پسوڵەکان -->
-    <div id="tab-records" class="tab-content hidden">
-      <div class="card">
-        <div class="card-title">
-          <span>📊 تۆماری حسابات و قەرزەکان</span>
-          <button class="btn btn-outline" onclick="exportExcel()">📥 داگرتنی Excel</button>
-        </div>
-        <div class="filter-pills">
-          <button class="pill active" onclick="setFilter('all',this)">هەمووی</button>
-          <button class="pill" onclick="setFilter('غەیرە واسڵ',this)">قەرزدارەکان</button>
-          <button class="pill" onclick="setFilter('واسڵ',this)">واسڵکراوەکان</option>
+    <!-- تابی ١: خەریتەی زیرەکی عێراق و تۆمارکردنی فرۆش -->
+    <div id="view-pos" class="view-section">
+      <div class="workspace-grid">
+        <!-- خەریتەی عێراق -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🌍 خەریتەی زیرەکی عێراق (دیاریکردنی دوکان)</div>
+            <div style="display:flex;gap:6px">
+              <button type="button" class="btn btn-soft" style="padding:6px 10px;font-size:.78rem" onclick="toggleMapLayer()">🛰️ سەتەلایت / شەقام</button>
