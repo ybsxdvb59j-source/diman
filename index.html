@@ -2,123 +2,142 @@
 <html lang="ckb" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>کارگەی چەرەزاتی دیمەن</title>
+<title>کارگەی چەرەزاتی دیمەن | Enterprise ERP</title>
 <link rel="stylesheet" href="https://unpkg.com"/>
+<link href="https://googleapis.com" rel="stylesheet">
 <style>
-*{box-sizing:border-box;font-family:sans-serif;margin:0;padding:0}
-body{background:#f3f4f6;color:#1f2937;padding-bottom:40px}
-header{background:#064e3b;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center}
-#login{max-width:350px;margin:60px auto;background:#fff;padding:25px;border-radius:12px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.1)}
-.box{max-width:800px;margin:12px auto;padding:0 12px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.stat{background:#fff;padding:10px;border-radius:8px;text-align:center;border-bottom:3px solid #064e3b}
-.card{background:#fff;padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 2px 5px rgba(0,0,0,.05)}
-h3{color:#064e3b;margin-bottom:10px;font-size:1rem;border-bottom:1px solid #eee;padding-bottom:5px}
-input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:6px;margin-bottom:8px;font-size:1rem}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn{width:100%;padding:11px;background:#064e3b;color:#fff;border:none;border-radius:6px;font-weight:bold;font-size:1rem}
-#map{height:300px;width:100%;border-radius:8px;margin:8px 0;z-index:1;border:1px solid #ccc}
-.fbar{display:flex;gap:5px;margin-bottom:8px;overflow-x:auto}
-.fbtn{padding:5px 10px;border-radius:12px;border:1px solid #064e3b;background:#fff;color:#064e3b;font-size:.8rem}
-.fbtn.act{background:#064e3b;color:#fff}
-.itm{border:1px solid #ddd;border-radius:8px;padding:10px;margin-bottom:8px;background:#fafafa;border-right:5px solid #16a34a}
-.itm.unp{border-right-color:#dc2626}
-.itm.ovd{background:#fef2f2}
-.bsm{padding:5px 8px;font-size:.8rem;border-radius:5px;border:none;color:#fff;margin-left:4px;margin-top:5px}
-.hid{display:none!important}
+:root{--p:#064e3b;--pd:#022c22;--pl:#047857;--gold:#d97706;--goldl:#fef3c7;--bg:#f8fafc;--card:#ffffff;--txt:#0f172a;--muted:#64748b;--red:#dc2626;--green:#16a34a;--border:#e2e8f0}
+*{box-sizing:border-box;font-family:'Vazirmatn',sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);padding-bottom:80px}
+header{background:linear-gradient(135deg,var(--pd),var(--p));color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo-badge{background:var(--gold);color:#fff;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem}
+.container{max-width:1000px;margin:18px auto;padding:0 15px}
+#login-screen{max-width:380px;margin:80px auto;background:var(--card);padding:35px 25px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);text-align:center;border-top:5px solid var(--gold)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat-card{background:var(--card);padding:16px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--border);position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;bottom:0;right:0;width:100%;height:4px;background:var(--p)}
+.stat-card.s-green::after{background:var(--green)}
+.stat-card.s-red::after{background:var(--red)}
+.stat-card.s-gold::after{background:var(--gold)}
+.stat-card small{color:var(--muted);font-size:.8rem;font-weight:600}
+.stat-card h2{font-size:1.35rem;margin-top:6px;font-weight:800}
+.card{background:var(--card);padding:20px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.04);border:1px solid var(--border);margin-bottom:16px}
+.card-title{color:var(--p);font-size:1.05rem;font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+label{display:block;font-size:.82rem;font-weight:700;margin-bottom:4px;color:#334155}
+input,select{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:.95rem;background:#fff;transition:.2s}
+input:focus,select:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(6,78,59,.1)}
+.btn{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{background:var(--pl)}
+.btn-gold{background:var(--gold)}
+.btn-gold:hover{background:#b45309}
+.btn-outline{background:#fff;color:var(--p);border:1px solid var(--p);padding:7px 12px;font-size:.82rem;width:auto}
+#map{height:320px;width:100%;border-radius:12px;z-index:1;border:1px solid var(--border);margin:10px 0}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0;z-index:1000;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+.nav-item{border:none;background:none;color:var(--muted);font-size:.75rem;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px}
+.nav-item.active{color:var(--p)}
+.nav-item span{font-size:1.25rem}
+.filter-pills{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px}
+.pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.pill.active{background:var(--p);color:#fff;border-color:var(--p)}
+.sale-card{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;border-right:5px solid var(--green);transition:.2s}
+.sale-card.unpaid{border-right-color:var(--red)}
+.sale-card.overdue{background:#fef2f2;border-color:#fecaca}
+.badge{padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+.b-paid{background:#dcfce7;color:#15803d}
+.b-unpaid{background:#fee2e2;color:#b91c1c}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.act-btn{padding:6px 10px;border-radius:6px;border:none;font-size:.78rem;font-weight:700;color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid var(--border)}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<div id="login">
-<h2 style="color:#064e3b;margin-bottom:10px">کارگەی چەرەزاتی دیمەن</h2>
-<p style="margin-bottom:12px;color:#666">کۆدی چوونەژوورەوە: 1234</p>
-<input type="number" id="pin" placeholder="1234" style="text-align:center;font-size:1.3rem">
-<button class="btn" onclick="go()">چوونەژوورەوە</button>
+<div id="login-screen">
+  <div class="logo-badge" style="margin:0 auto 12px;width:50px;height:50px;font-size:1.5rem">د</div>
+  <h2 style="color:var(--p);margin-bottom:6px">کارگەی چەرەزاتی دیمەن</h2>
+  <p style="color:var(--muted);font-size:.85rem;margin-bottom:20px">سیستەمی نێودەوڵەتی بەڕێوەبردنی فرۆش و کۆگا</p>
+  <input type="password" id="pin-input" placeholder="کۆدی چوونەژوورەوە (1234)" style="text-align:center;font-size:1.2rem;letter-spacing:4px;margin-bottom:12px">
+  <button class="btn" onclick="login()">چوونەژوورەوە بۆ سیستەم</button>
 </div>
 
-<div id="app" class="hid">
-<header><b>کارگەی چەرەزاتی دیمەن</b><button onclick="location.reload()" style="background:#ffffff33;border:none;color:#fff;padding:5px 10px;border-radius:5px">قوفڵ</button></header>
-<div class="box">
-<div class="grid">
-<div class="stat"><small>مامەڵەکان</small><br><b id="s1">0</b></div>
-<div class="stat" style="border-color:#16a34a"><small>واسڵ</small><br><b id="s2" style="color:#16a34a">0</b></div>
-<div class="stat" style="border-color:#dc2626"><small>غەیرە واسڵ</small><br><b id="s3" style="color:#dc2626">0</b></div>
-</div>
+<div id="main-system" class="hidden">
+  <header>
+    <div class="brand">
+      <div class="logo-badge">د</div>
+      <div>
+        <h1 style="font-size:1.05rem;font-weight:800">کارگەی چەرەزاتی دیمەن</h1>
+        <small style="font-size:.72rem;opacity:.85">Enterprise Sales & GIS System</small>
+      </div>
+    </div>
+    <button onclick="location.reload()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:.8rem;cursor:pointer">🔒 قوفڵدان</button>
+  </header>
 
-<div class="card">
-<h3>خەریتەی عێراق</h3>
-<button type="button" class="btn" style="background:#d97706;padding:8px;font-size:.85rem" onclick="gps()">📍 دیاریکردنی شوێنی ئێستام (GPS)</button>
-<div id="map"></div>
-<small id="loc-t" style="color:#666">کلیک لە نەخشەکە بکە بۆ شوێنی کڕیار</small>
-</div>
+  <div class="container">
+    <!-- بەشی ١: داشبۆرد و فرۆش -->
+    <div id="tab-sales" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card"><small>کۆی مامەڵەکان</small><h2 id="st-count">0</h2></div>
+        <div class="stat-card s-green"><small>کۆی واسڵکراو</small><h2 id="st-paid" style="color:var(--green)">0</h2></div>
+        <div class="stat-card s-red"><small>قەرز (غەیرە واسڵ)</small><h2 id="st-unpaid" style="color:var(--red)">0</h2></div>
+        <div class="stat-card s-gold"><small>کاڵای ناو کۆگا (کیلۆ)</small><h2 id="st-stock" style="color:var(--gold)">0</h2></div>
+      </div>
 
-<div class="card">
-<h3>مامەڵەی نوێ</h3>
-<form onsubmit="add(event)">
-<div class="row"><input id="n" placeholder="ناوی کڕیار" required><input id="p" type="tel" placeholder="مۆبایل" required></div>
-<div class="row">
-<select id="c"><option>هەولێر</option><option>سلێمانی</option><option>دهۆک</option><option>کەرکوک</option><option>هەڵەبجە</option><option>بەغدا</option><option>موسڵ</option><option>بەسرە</option><option>ئەنبار</option><option>دیالە</option><option>سەڵاحەدین</option><option>نەجەف</option><option>کەربەلا</option><option>بابل</option><option>واست</option><option>میسان</option><option>زیقار</option><option>موسەننا</option><option>دیوانیە</option></select>
-<input id="i" placeholder="جۆر و بڕی چەرەزات" required>
-</div>
-<div class="row">
-<input id="a" type="number" placeholder="بڕی پارە" required>
-<select id="st" onchange="dt()"><option value="واسڵ">واسڵ</option><option value="غەیرە واسڵ">غەیرە واسڵ</option></select>
-</div>
-<input id="d" type="date" class="hid">
-<button type="submit" class="btn">💾 پاشەکەوتکردن</button>
-</form>
-</div>
+      <div class="card">
+        <div class="card-title">
+          <span>📍 خەریتەی عێراق و دیاریکردنی شوێنی کڕیار</span>
+          <button type="button" class="btn btn-gold" style="width:auto;padding:6px 12px;font-size:.8rem" onclick="getGPS()">شوێنی ئێستام (GPS)</button>
+        </div>
+        <div id="map"></div>
+        <small id="loc-status" style="color:var(--muted)">کلیک لەسەر نەخشەکە بکە بۆ دانانی نیشانەی کڕیار (سەوز: واسڵ | سوور: قەرز)</small>
+      </div>
 
-<div class="card">
-<h3>حسابات و کڕیاران</h3>
-<div class="fbar">
-<button class="fbtn act" onclick="fl('all',this)">هەمووی</button>
-<button class="fbtn" onclick="fl('غەیرە واسڵ',this)">غەیرە واسڵ</button>
-<button class="fbtn" onclick="fl('واسڵ',this)">واسڵ</button>
-<button class="fbtn" onclick="fl('due',this)">کاتی پارەدان</button>
-</div>
-<input id="q" oninput="show()" placeholder="گەڕان...">
-<div id="lst"></div>
-</div>
-</div>
-</div>
+      <div class="card">
+        <div class="card-title"><span>📝 تۆمارکردنی پسوڵەی فرۆشی نوێ</span></div>
+        <form onsubmit="addSale(event)">
+          <div class="form-grid">
+            <div><label>ناوی کڕیار / مارکێت</label><input id="c-name" required placeholder="نموونە: مارکێتی شەهیدان"></div>
+            <div><label>ژمارە مۆبایل (واتسئەپ)</label><input id="c-phone" type="tel" required placeholder="0750..."></div>
+            <div>
+              <label>پارێزگا</label>
+              <select id="c-city">
+                <option>هەولێر</option><option>سلێمانی</option><option>دهۆک</option><option>کەرکوک</option><option>هەڵەبجە</option>
+                <option>بەغدا</option><option>موسڵ</option><option>بەسرە</option><option>ئەنبار</option><option>دیالە</option>
+                <option>سەڵاحەدین</option><option>نەجەف</option><option>کەربەلا</option><option>بابل</option><option>واست</option>
+                <option>میسان</option><option>زیقار</option><option>موسەننا</option><option>دیوانیە</option>
+              </select>
+            </div>
+            <div>
+              <label>هەڵبژاردنی بەرهەم لە کۆگا</label>
+              <select id="s-product" onchange="calcTotal()"></select>
+            </div>
+            <div><label>بڕ (کیلۆ / کارتۆن)</label><input id="s-qty" type="number" step="0.5" value="1" oninput="calcTotal()" required></div>
+            <div><label>کۆی گشتی پارە</label><input id="s-amount" type="number" required></div>
+            <div>
+              <label>دۆخی پارەدان</label>
+              <select id="s-status" onchange="toggleDue()">
+                <option value="واسڵ">واسڵ (نەقد)</option>
+                <option value="غەیرە واسڵ">غەیرە واسڵ (قەرز)</option>
+              </select>
+            </div>
+            <div id="due-box" class="hidden"><label>بەرواری دانەوەی قەرز</label><input id="s-due" type="date"></div>
+          </div>
+          <button type="submit" class="btn" style="margin-top:14px">💾 تۆمارکردن و دەرکردنی پسوڵە</button>
+        </form>
+      </div>
+    </div>
 
-<script src="https://unpkg.com"></script>
-<script>
-let db=JSON.parse(localStorage.getItem('diman_db')||'[]'),map,mk,la=36.1911,ln=44.0091,cf='all',ly;
-function go(){
-  if(document.getElementById('pin').value=='1234'){
-    document.getElementById('login').classList.add('hid');
-    document.getElementById('app').classList.remove('hid');
-    setTimeout(im, 200);
-    show();
-  } else alert('1234 بنووسە');
-}
-function im(){
-  if(map){ map.invalidateSize(); return; }
-  map=L.map('map').setView([35.5, 44.0], 6);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  ly=L.layerGroup().addTo(map);
-  map.on('click',e=>sl(e.latlng.lat,e.latlng.lng));
-}
-function sl(x,y){la=x;ln=y;if(mk)map.removeLayer(mk);mk=L.marker([x,y]).addTo(map);document.getElementById('loc-t').innerText='شوێن دیاریکرا: '+x.toFixed(4)+', '+y.toFixed(4);}
-function gps(){
-  if(!navigator.geolocation){ alert('مۆبایلەکەت پشتگیری GPS ناکات'); return; }
-  document.getElementById('loc-t').innerText='چاوەڕێ بکە، شوێنەکەت دەدۆزێتەوە...';
-  navigator.geolocation.getCurrentPosition(
-    p=>{ map.setView([p.coords.latitude,p.coords.longitude],16); sl(p.coords.latitude,p.coords.longitude); },
-    err=>{ alert('تکایە لە ڕێکخستنەکانی ئایفۆن (Settings -> Privacy -> Location Services -> Safari) ڕێگە بە GPS بدە'); },
-    {enableHighAccuracy:true, timeout:10000}
-  );
-}
-function dt(){document.getElementById('d').classList.toggle('hid',document.getElementById('st').value=='واسڵ');}
-function add(e){e.preventDefault();let s=document.getElementById('st').value;db.unshift({id:Date.now(),n:n.value,p:p.value,c:c.value,i:i.value,a:+a.value,s:s,d:s=='غەیرە واسڵ'?d.value:'',la,ln});localStorage.setItem('diman_db',JSON.stringify(db));e.target.reset();d.classList.add('hid');show();alert('تۆمارکرا!');}
-function fl(f,b){cf=f;document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('act'));b.classList.add('act');show();}
-function show(){let l=document.getElementById('lst'),s=q.value.toLowerCase(),t=new Date().toISOString().split('T'),p1=0,p2=0;l.innerHTML='';if(ly)ly.clearLayers();db.forEach(r=>{if(r.s=='واسڵ')p1+=r.a;else p2+=r.a;if(ly)ly.addLayer(L.marker([r.la,r.ln]).bindPopup(r.n+' ('+r.s+')'));});s1.innerText=db.length;s2.innerText=p1.toLocaleString();s3.innerText=p2.toLocaleString();db.filter(r=>(r.n.toLowerCase().includes(s)||r.c.includes(s))&&(cf=='all'||(cf=='due'?r.s=='غەیرە واسڵ'&&r.d&&r.d<=t:r.s==cf))).forEach(r=>{let ov=r.s=='غەیرە واسڵ'&&r.d&&r.d<=t;l.innerHTML+=`<div class="itm ${r.s=='غەیرە واسڵ'?'unp':''} ${ov?'ovd':''}"><b>${r.n} (${r.c})</b> - <span style="color:${r.s=='واسڵ'?'#16a34a':'#dc2626'}">${r.s}</span><br><small>📞 ${r.p} | 📦 ${r.i} | 💰 ${r.a.toLocaleString()} ${r.d?'| 📅 '+r.d:''}</small><br>${r.s=='غەیرە واسڵ'?`<button class="bsm" style="background:#16a34a" onclick="py(${r.id})">✅ واسڵ</button>`:''}<button class="bsm" style="background:#2563eb" onclick="zm(${r.la},${r.ln})">📍 نەخشە</button><button class="bsm" style="background:#666" onclick="dl(${r.id})">🗑️</button></div>`;});}
-function py(id){if(confirm('واسڵ کرا؟')){let x=db.find(i=>i.id==id);x.s='واسڵ';x.d='';localStorage.setItem('diman_db',JSON.stringify(db));show();}}
-function zm(x,y){map.setView([x,y],15);window.scrollTo(0,0);}
-function dl(id){if(confirm('بسڕێتەوە؟')){db=db.filter(i=>i.id!=id);localStorage.setItem('diman_db',JSON.stringify(db));show();}}
-</script>
-</body>
-</html>
+    <!-- بەشی ٢: لیستی حسابات و پسوڵەکان -->
+    <div id="tab-records" class="tab-content hidden">
+      <div class="card">
+        <div class="card-title">
+          <span>📊 تۆماری حسابات و قەرزەکان</span>
+          <button class="btn btn-outline" onclick="exportExcel()">📥 داگرتنی Excel</button>
+        </div>
+        <div class="filter-pills">
+          <button class="pill active" onclick="setFilter('all',this)">هەمووی</button>
+          <button class="pill" onclick="setFilter('غەیرە واسڵ',this)">قەرزدارەکان</button>
+          <button class="pill" onclick="setFilter('واسڵ',this)">واسڵکراوەکان</option>
