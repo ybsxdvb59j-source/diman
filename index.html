@@ -4,141 +4,121 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>کارگەی چەرەزاتی دیمەن</title>
 <link rel="stylesheet" href="https://unpkg.com"/>
-<link href="https://googleapis.com" rel="stylesheet">
 <style>
-:root{--p:#064e3b;--pl:#047857;--a:#d97706;--bg:#f3f4f6;--d:#dc2626;--s:#16a34a}
-*{box-sizing:border-box;font-family:'Vazirmatn',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:#1f2937;padding-bottom:40px}
-header{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000}
-.l-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer}
-#login-screen{max-width:400px;margin:50px auto;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.1);text-align:center}
-.container{max-width:850px;margin:15px auto;padding:0 12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.s-card{background:#fff;padding:10px;border-radius:10px;text-align:center;border-bottom:4px solid var(--p)}
-.card{background:#fff;padding:15px;border-radius:12px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
-h3{color:var(--p);margin-bottom:10px;font-size:1rem;border-bottom:1px solid #eee;padding-bottom:6px}
-.fg{margin-bottom:10px;text-align:right}
-label{display:block;font-size:.85rem;margin-bottom:3px;font-weight:700}
-input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font-size:.95rem}
+*{box-sizing:border-box;font-family:sans-serif;margin:0;padding:0}
+body{background:#f3f4f6;color:#1f2937;padding-bottom:40px}
+header{background:#064e3b;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center}
+#login{max-width:350px;margin:60px auto;background:#fff;padding:25px;border-radius:12px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.box{max-width:800px;margin:12px auto;padding:0 12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;padding:10px;border-radius:8px;text-align:center;border-bottom:3px solid #064e3b}
+.card{background:#fff;padding:14px;border-radius:10px;margin-bottom:12px;box-shadow:0 2px 5px rgba(0,0,0,.05)}
+h3{color:#064e3b;margin-bottom:10px;font-size:1rem;border-bottom:1px solid #eee;padding-bottom:5px}
+input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:6px;margin-bottom:8px;font-size:1rem}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn{width:100%;padding:11px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:700;margin-top:5px;cursor:pointer}
-#map{height:300px;width:100%;border-radius:10px;z-index:1;margin:8px 0}
-.f-bar{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto}
-.f-btn{padding:5px 12px;border-radius:15px;border:1px solid var(--p);background:#fff;color:var(--p);white-space:nowrap;font-size:.8rem;cursor:pointer}
-.f-btn.active{background:var(--p);color:#fff}
-.item{border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin-bottom:8px;background:#fafafa;border-right:5px solid var(--s)}
-.item.unpaid{border-right-color:var(--d)}
-.item.overdue{background:#fef2f2;border-color:#fecaca}
-.badge{padding:2px 8px;border-radius:5px;font-size:.75rem;color:#fff}
-.btn-sm{padding:5px 9px;font-size:.8rem;border-radius:6px;border:none;color:#fff;margin-left:5px;margin-top:6px;cursor:pointer}
-.hidden{display:none!important}
+.btn{width:100%;padding:11px;background:#064e3b;color:#fff;border:none;border-radius:6px;font-weight:bold;font-size:1rem}
+#map{height:300px;width:100%;border-radius:8px;margin:8px 0;z-index:1;border:1px solid #ccc}
+.fbar{display:flex;gap:5px;margin-bottom:8px;overflow-x:auto}
+.fbtn{padding:5px 10px;border-radius:12px;border:1px solid #064e3b;background:#fff;color:#064e3b;font-size:.8rem}
+.fbtn.act{background:#064e3b;color:#fff}
+.itm{border:1px solid #ddd;border-radius:8px;padding:10px;margin-bottom:8px;background:#fafafa;border-right:5px solid #16a34a}
+.itm.unp{border-right-color:#dc2626}
+.itm.ovd{background:#fef2f2}
+.bsm{padding:5px 8px;font-size:.8rem;border-radius:5px;border:none;color:#fff;margin-left:4px;margin-top:5px}
+.hid{display:none!important}
 </style>
 </head>
 <body>
-<div id="login-screen">
-<h2 style="color:var(--p);margin-bottom:8px">کارگەی چەرەزاتی دیمەن</h2>
-<p style="color:#666;font-size:.85rem;margin-bottom:15px">تکایە بە ئەکاونتی تایبەتی خۆت بچۆ ژوورەوە</p>
-<div class="fg"><label>ئیمەیڵ</label><input type="email" id="email" value="diman@diman.com"></div>
-<div class="fg"><label>وشەی نهێنی</label><input type="password" id="pass" placeholder="وشەی نهێنی بنووسە"></div>
-<button type="button" class="btn" id="login-btn">چوونەژوورەوە</button>
-<p id="err" style="color:red;margin-top:10px;font-size:.85rem;font-weight:bold"></p>
+
+<div id="login">
+<h2 style="color:#064e3b;margin-bottom:10px">کارگەی چەرەزاتی دیمەن</h2>
+<p style="margin-bottom:12px;color:#666">کۆدی چوونەژوورەوە: 1234</p>
+<input type="number" id="pin" placeholder="1234" style="text-align:center;font-size:1.3rem">
+<button class="btn" onclick="go()">چوونەژوورەوە</button>
 </div>
 
-<div id="app-screen" class="hidden">
-<header>
-<div><h1 style="font-size:1.1rem">کارگەی چەرەزاتی دیمەن</h1><small id="u-disp" style="font-size:.75rem"></small></div>
-<button type="button" class="l-btn" id="logout-btn">چوونەدەرەوە</button>
-</header>
-<div class="container">
-<div class="stats">
-<div class="s-card"><h6>مامەڵەکان</h6><b id="st-all">0</b></div>
-<div class="s-card" style="border-color:var(--s)"><h6>واسڵکراو</h6><b id="st-paid" style="color:var(--s)">0</b></div>
-<div class="s-card" style="border-color:var(--d)"><h6>غەیرە واسڵ</h6><b id="st-unpaid" style="color:var(--d)">0</b></div>
+<div id="app" class="hid">
+<header><b>کارگەی چەرەزاتی دیمەن</b><button onclick="location.reload()" style="background:#ffffff33;border:none;color:#fff;padding:5px 10px;border-radius:5px">قوفڵ</button></header>
+<div class="box">
+<div class="grid">
+<div class="stat"><small>مامەڵەکان</small><br><b id="s1">0</b></div>
+<div class="stat" style="border-color:#16a34a"><small>واسڵ</small><br><b id="s2" style="color:#16a34a">0</b></div>
+<div class="stat" style="border-color:#dc2626"><small>غەیرە واسڵ</small><br><b id="s3" style="color:#dc2626">0</b></div>
 </div>
+
 <div class="card">
 <h3>خەریتەی عێراق</h3>
-<button type="button" class="btn" style="background:var(--a);padding:8px;font-size:.85rem" id="gps-btn">📍 شوێنی ئێستام (GPS)</button>
+<button type="button" class="btn" style="background:#d97706;padding:8px;font-size:.85rem" onclick="gps()">📍 دیاریکردنی شوێنی ئێستام (GPS)</button>
 <div id="map"></div>
-<small id="c-txt" style="color:#666">کلیک لە نەخشەکە بکە بۆ شوێنی کڕیار</small>
+<small id="loc-t" style="color:#666">کلیک لە نەخشەکە بکە بۆ شوێنی کڕیار</small>
 </div>
+
 <div class="card">
-<h3>تۆمارکردنی مامەڵە</h3>
-<form id="s-form">
+<h3>مامەڵەی نوێ</h3>
+<form onsubmit="add(event)">
+<div class="row"><input id="n" placeholder="ناوی کڕیار" required><input id="p" type="tel" placeholder="مۆبایل" required></div>
 <div class="row">
-<div class="fg"><label>ناوی کڕیار</label><input type="text" id="cname" required></div>
-<div class="fg"><label>مۆبایل</label><input type="tel" id="cphone" required></div>
-</div>
-<div class="row">
-<div class="fg"><label>پارێزگا</label>
-<select id="ccity"><option>هەولێر</option><option>سلێمانی</option><option>دهۆک</option><option>کەرکوک</option><option>هەڵەبجە</option><option>بەغدا</option><option>موسڵ</option><option>بەسرە</option><option>ئەنبار</option><option>دیالە</option><option>سەڵاحەدین</option><option>نەجەف</option><option>کەربەلا</option><option>بابل</option><option>واست</option><option>میسان</option><option>زیقار</option><option>موسەننا</option><option>دیوانیە</option></select>
-</div>
-<div class="fg"><label>جۆر و بڕ</label><input type="text" id="idesc" required placeholder="٢٠ کیلۆ فستق"></div>
+<select id="c"><option>هەولێر</option><option>سلێمانی</option><option>دهۆک</option><option>کەرکوک</option><option>هەڵەبجە</option><option>بەغدا</option><option>موسڵ</option><option>بەسرە</option><option>ئەنبار</option><option>دیالە</option><option>سەڵاحەدین</option><option>نەجەف</option><option>کەربەلا</option><option>بابل</option><option>واست</option><option>میسان</option><option>زیقار</option><option>موسەننا</option><option>دیوانیە</option></select>
+<input id="i" placeholder="جۆر و بڕی چەرەزات" required>
 </div>
 <div class="row">
-<div class="fg"><label>بڕی پارە</label><input type="number" id="amt" required></div>
-<div class="fg"><label>دۆخی پارەدان</label><select id="pstat"><option value="واسڵ">واسڵ</option><option value="غەیرە واسڵ">غەیرە واسڵ</option></select></div>
+<input id="a" type="number" placeholder="بڕی پارە" required>
+<select id="st" onchange="dt()"><option value="واسڵ">واسڵ</option><option value="غەیرە واسڵ">غەیرە واسڵ</option></select>
 </div>
-<div class="fg" id="dd-grp" style="display:none"><label>کاتی پارەدان</label><input type="date" id="ddate"></div>
+<input id="d" type="date" class="hid">
 <button type="submit" class="btn">💾 پاشەکەوتکردن</button>
 </form>
 </div>
+
 <div class="card">
 <h3>حسابات و کڕیاران</h3>
-<div class="f-bar">
-<button type="button" class="f-btn active" onclick="flt('all',this)">هەمووی</button>
-<button type="button" class="f-btn" onclick="flt('غەیرە واسڵ',this)">غەیرە واسڵ</button>
-<button type="button" class="f-btn" onclick="flt('واسڵ',this)">واسڵ</button>
-<button type="button" class="f-btn" onclick="flt('due',this)">کاتی پارەدان</button>
+<div class="fbar">
+<button class="fbtn act" onclick="fl('all',this)">هەمووی</button>
+<button class="fbtn" onclick="fl('غەیرە واسڵ',this)">غەیرە واسڵ</button>
+<button class="fbtn" onclick="fl('واسڵ',this)">واسڵ</button>
+<button class="fbtn" onclick="fl('due',this)">کاتی پارەدان</button>
 </div>
-<input type="text" id="srch" placeholder="گەڕان..." style="margin-bottom:10px">
-<div id="list"></div>
+<input id="q" oninput="show()" placeholder="گەڕان...">
+<div id="lst"></div>
 </div>
 </div>
 </div>
+
 <script src="https://unpkg.com"></script>
-<script type="module">
-import {initializeApp} from "https://gstatic.com";
-import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://gstatic.com";
-import {getFirestore,collection,addDoc,onSnapshot,doc,updateDoc,deleteDoc,query,orderBy} from "https://gstatic.com";
-
-const app=initializeApp({apiKey:"AIzaSyDklyjBKzZvlrTD2lNWDl-zrBd3m2qSnd8",authDomain:"://firebaseapp.com",projectId:"diman-factory",storageBucket:"diman-factory.firebasestorage.app",messagingSenderId:"1027555737727",appId:"1:1027555737727:web:5637f8a9fa5aa45ae8ff4a"});
-const auth=getAuth(app),db=getFirestore(app);
-let map,mk,lat=33.3152,lng=44.3661,recs=[],curF='all',mLayer=L.layerGroup();
-
-onAuthStateChanged(auth,u=>{
-if(u){document.getElementById('login-screen').classList.add('hidden');document.getElementById('app-screen').classList.remove('hidden');document.getElementById('u-disp').innerText=u.email;initM();loadR();}
-else{document.getElementById('login-screen').classList.remove('hidden');document.getElementById('app-screen').classList.add('hidden');}
-});
-
-document.getElementById('login-btn').addEventListener('click', async () => {
-const e=document.getElementById('email').value.trim();
-const p=document.getElementById('pass').value;
-const errBox=document.getElementById('err');
-if(!e || !p){ errBox.innerText="تکایە ئیمەیڵ و پاسۆرد بنووسە"; return; }
-errBox.style.color="green";
-errBox.innerText="چاوەڕێ بکە، دەچێتە ژوورەوە...";
-try {
-  await signInWithEmailAndPassword(auth,e,p);
-} catch(er) {
-  errBox.style.color="red";
-  errBox.innerText="هەڵەی چوونەژوورەوە: " + er.message;
+<script>
+let db=JSON.parse(localStorage.getItem('diman_db')||'[]'),map,mk,la=36.1911,ln=44.0091,cf='all',ly;
+function go(){
+  if(document.getElementById('pin').value=='1234'){
+    document.getElementById('login').classList.add('hid');
+    document.getElementById('app').classList.remove('hid');
+    setTimeout(im, 200);
+    show();
+  } else alert('1234 بنووسە');
 }
-});
-
-document.getElementById('logout-btn').onclick=()=>signOut(auth);
-
-function initM(){if(map)return;map=L.map('map').setView([33.3152,44.3661],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);mLayer.addTo(map);map.on('click',e=>setL(e.latlng.lat,e.latlng.lng));}
-function setL(la,ln){lat=la;lng=ln;if(mk)map.removeLayer(mk);mk=L.marker([la,ln]).addTo(map);document.getElementById('c-txt').innerText=`شوێن: ${la.toFixed(4)}, ${ln.toFixed(4)}`;}
-document.getElementById('gps-btn').onclick=()=>navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{map.setView([p.coords.latitude,p.coords.longitude],15);setL(p.coords.latitude,p.coords.longitude);});
-document.getElementById('pstat').onchange=e=>document.getElementById('dd-grp').style.display=e.target.value==='غەیرە واسڵ'?'block':'none';
-
-document.getElementById('s-form').onsubmit=async e=>{
-e.preventDefault();const st=document.getElementById('pstat').value;
-await addDoc(collection(db,"sales"),{name:document.getElementById('cname').value,phone:document.getElementById('cphone').value,city:document.getElementById('ccity').value,item:document.getElementById('idesc').value,amount:Number(document.getElementById('amt').value),status:st,dueDate:st==='غەیرە واسڵ'?document.getElementById('ddate').value:'',lat,lng,addedBy:auth.currentUser.email,createdAt:new Date().toISOString()});
-document.getElementById('s-form').reset();document.getElementById('dd-grp').style.display='none';alert("بە سەرکەوتوویی تۆمارکرا!");
-};
-
-function loadR(){
-onSnapshot(query(collection(db,"sales"),orderBy("createdAt","desc")),s=>{
-recs=[];mLayer.clearLayers();let tp=0,tu=0;
-s.forEach(d=>{const i={id:d.id,...d.data()};recs.push(i);if(i.status==='واسڵ')tp+=i.amount;else tu+=i.amount;if(i.lat)mLayer.addLayer(L.marker([i.lat,i.lng]).bindPopup(`<b>${i.name}</b><br>${i.status}: ${i.amount}`));});
+function im(){
+  if(map){ map.invalidateSize(); return; }
+  map=L.map('map').setView([35.5, 44.0], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  ly=L.layerGroup().addTo(map);
+  map.on('click',e=>sl(e.latlng.lat,e.latlng.lng));
+}
+function sl(x,y){la=x;ln=y;if(mk)map.removeLayer(mk);mk=L.marker([x,y]).addTo(map);document.getElementById('loc-t').innerText='شوێن دیاریکرا: '+x.toFixed(4)+', '+y.toFixed(4);}
+function gps(){
+  if(!navigator.geolocation){ alert('مۆبایلەکەت پشتگیری GPS ناکات'); return; }
+  document.getElementById('loc-t').innerText='چاوەڕێ بکە، شوێنەکەت دەدۆزێتەوە...';
+  navigator.geolocation.getCurrentPosition(
+    p=>{ map.setView([p.coords.latitude,p.coords.longitude],16); sl(p.coords.latitude,p.coords.longitude); },
+    err=>{ alert('تکایە لە ڕێکخستنەکانی ئایفۆن (Settings -> Privacy -> Location Services -> Safari) ڕێگە بە GPS بدە'); },
+    {enableHighAccuracy:true, timeout:10000}
+  );
+}
+function dt(){document.getElementById('d').classList.toggle('hid',document.getElementById('st').value=='واسڵ');}
+function add(e){e.preventDefault();let s=document.getElementById('st').value;db.unshift({id:Date.now(),n:n.value,p:p.value,c:c.value,i:i.value,a:+a.value,s:s,d:s=='غەیرە واسڵ'?d.value:'',la,ln});localStorage.setItem('diman_db',JSON.stringify(db));e.target.reset();d.classList.add('hid');show();alert('تۆمارکرا!');}
+function fl(f,b){cf=f;document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('act'));b.classList.add('act');show();}
+function show(){let l=document.getElementById('lst'),s=q.value.toLowerCase(),t=new Date().toISOString().split('T'),p1=0,p2=0;l.innerHTML='';if(ly)ly.clearLayers();db.forEach(r=>{if(r.s=='واسڵ')p1+=r.a;else p2+=r.a;if(ly)ly.addLayer(L.marker([r.la,r.ln]).bindPopup(r.n+' ('+r.s+')'));});s1.innerText=db.length;s2.innerText=p1.toLocaleString();s3.innerText=p2.toLocaleString();db.filter(r=>(r.n.toLowerCase().includes(s)||r.c.includes(s))&&(cf=='all'||(cf=='due'?r.s=='غەیرە واسڵ'&&r.d&&r.d<=t:r.s==cf))).forEach(r=>{let ov=r.s=='غەیرە واسڵ'&&r.d&&r.d<=t;l.innerHTML+=`<div class="itm ${r.s=='غەیرە واسڵ'?'unp':''} ${ov?'ovd':''}"><b>${r.n} (${r.c})</b> - <span style="color:${r.s=='واسڵ'?'#16a34a':'#dc2626'}">${r.s}</span><br><small>📞 ${r.p} | 📦 ${r.i} | 💰 ${r.a.toLocaleString()} ${r.d?'| 📅 '+r.d:''}</small><br>${r.s=='غەیرە واسڵ'?`<button class="bsm" style="background:#16a34a" onclick="py(${r.id})">✅ واسڵ</button>`:''}<button class="bsm" style="background:#2563eb" onclick="zm(${r.la},${r.ln})">📍 نەخشە</button><button class="bsm" style="background:#666" onclick="dl(${r.id})">🗑️</button></div>`;});}
+function py(id){if(confirm('واسڵ کرا؟')){let x=db.find(i=>i.id==id);x.s='واسڵ';x.d='';localStorage.setItem('diman_db',JSON.stringify(db));show();}}
+function zm(x,y){map.setView([x,y],15);window.scrollTo(0,0);}
+function dl(id){if(confirm('بسڕێتەوە؟')){db=db.filter(i=>i.id!=id);localStorage.setItem('diman_db',JSON.stringify(db));show();}}
+</script>
+</body>
+</html>
