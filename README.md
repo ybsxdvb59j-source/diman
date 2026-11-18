@@ -1,1 +1,139 @@
-# diman
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی کارگەی چەرەزاتی دیمەن</title>
+    <link rel="stylesheet" href="https://unpkg.com" />
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root { --primary: #064e3b; --primary-light: #047857; --accent: #d97706; --bg: #f3f4f6; --white: #ffffff; --danger: #dc2626; --success: #16a34a; }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg); color: #1f2937; padding-bottom: 50px; }
+        header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        header h1 { font-size: 1.2rem; }
+        .logout-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+        #login-screen { max-width: 400px; margin: 60px auto; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; }
+        #login-screen h2 { color: var(--primary); margin-bottom: 10px; }
+        #login-screen p { color: #6b7280; font-size: 0.9rem; margin-bottom: 20px; }
+        .container { max-width: 900px; margin: 15px auto; padding: 0 15px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: var(--white); padding: 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 4px solid var(--primary); }
+        .stat-card.unpaid { border-color: var(--danger); }
+        .stat-card.paid { border-color: var(--success); }
+        .stat-card h3 { font-size: 0.8rem; color: #6b7280; }
+        .stat-card p { font-size: 1.1rem; font-weight: bold; margin-top: 5px; }
+        .card { background: var(--white); padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .card h3 { color: var(--primary); margin-bottom: 12px; font-size: 1.05rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+        .form-group { margin-bottom: 12px; text-align: right; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: 600; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .btn-gps { background: var(--accent); margin-bottom: 10px; font-size: 0.9rem; padding: 8px; }
+        #map { height: 320px; width: 100%; border-radius: 10px; z-index: 1; margin-bottom: 10px; }
+        .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; }
+        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--primary); background: white; color: var(--primary); cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
+        .filter-btn.active { background: var(--primary); color: white; }
+        .record-item { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; margin-bottom: 10px; background: #fafafa; border-right: 5px solid var(--success); }
+        .record-item.unpaid { border-right-color: var(--danger); }
+        .record-item.overdue { background: #fef2f2; border-color: #fecaca; }
+        .record-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: white; }
+        .badge-paid { background: var(--success); }
+        .badge-unpaid { background: var(--danger); }
+        .record-details { font-size: 0.85rem; color: #4b5563; line-height: 1.6; }
+        .action-btns { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer; color: white; }
+        .btn-pay { background: var(--success); }
+        .btn-loc { background: #2563eb; }
+        .btn-del { background: #6b7280; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="login-screen">
+        <h2>کارگەی چەرەزاتی دیمەن</h2>
+        <p>تکایە بە ئەکاونتی تایبەتی خۆت بچۆ ژوورەوە</p>
+        <div class="form-group">
+            <label>ئیمەیڵ</label>
+            <input type="email" id="login-email" placeholder="diman@diman.com">
+        </div>
+        <div class="form-group">
+            <label>وشەی نهێنی (پاسۆرد)</label>
+            <input type="password" id="login-password" placeholder="******">
+        </div>
+        <button type="button" class="btn" id="login-btn">چوونەژوورەوە</button>
+        <p id="login-error" style="color: red; margin-top: 10px; font-size: 0.85rem;"></p>
+    </div>
+
+    <div id="app-screen" class="hidden">
+        <header>
+            <div>
+                <h1>کارگەی چەرەزاتی دیمەن</h1>
+                <small id="user-display" style="font-size: 0.75rem; opacity: 0.9;"></small>
+            </div>
+            <button type="button" class="logout-btn" id="logout-btn">چوونەدەرەوە</button>
+        </header>
+
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card"><h3>کۆی مامەڵەکان</h3><p id="stat-total">0</p></div>
+                <div class="stat-card paid"><h3>کۆی واسڵکراو</h3><p id="stat-paid" style="color: var(--success);">0</p></div>
+                <div class="stat-card unpaid"><h3>قەرز (غەیرە واسڵ)</h3><p id="stat-unpaid" style="color: var(--danger);">0</p></div>
+            </div>
+
+            <div class="card">
+                <h3>خەریتەی عێراق - دیاریکردنی شوێنی کڕیار</h3>
+                <button type="button" class="btn btn-gps" id="gps-btn">📍 دیاریکردنی شوێنی ئێستام (GPS)</button>
+                <div id="map"></div>
+                <small id="coords-text" style="color: #6b7280;">کلیک لەسەر نەخشەکە بکە بۆ دانانی نیشانەی کڕیار</small>
+            </div>
+
+            <div class="card">
+                <h3>تۆمارکردنی مامەڵەی نوێ</h3>
+                <form id="sales-form">
+                    <div class="row">
+                        <div class="form-group"><label>ناوی کڕیار / مارکێت</label><input type="text" id="cust-name" required placeholder="ناوی کڕیار"></div>
+                        <div class="form-group"><label>ژمارە مۆبایل</label><input type="tel" id="cust-phone" required placeholder="0750..."></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label>پارێزگا</label>
+                            <select id="cust-city">
+                                <option value="هەولێر">هەولێر</option><option value="سلێمانی">سلێمانی</option><option value="دهۆک">دهۆک</option>
+                                <option value="کەرکوک">کەرکوک</option><option value="هەڵەبجە">هەڵەبجە</option><option value="بەغدا">بەغدا</option>
+                                <option value="موسڵ">موسڵ</option><option value="بەسرە">بەسرە</option><option value="ئەنبار">ئەنبار</option>
+                                <option value="دیالە">دیالە</option><option value="سەڵاحەدین">سەڵاحەدین</option><option value="نەجەف">نەجەف</option>
+                                <option value="کەربەلا">کەربەلا</option><option value="بابل">بابل</option><option value="واست">واست</option>
+                                <option value="میسان">میسان</option><option value="زیقار">زیقار</option><option value="موسەننا">موسەننا</option>
+                                <option value="دیوانیە">دیوانیە</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>جۆر و بڕی چەرەزات</label><input type="text" id="item-desc" required placeholder="نموونە: ٢٠ کیلۆ فستق"></div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group"><label>بڕی پارە</label><input type="number" id="amount" required placeholder="بڕی پارە بنووسە"></div>
+                        <div class="form-group">
+                            <label>دۆخی پارەدان</label>
+                            <select id="payment-status">
+                                <option value="واسڵ">واسڵ (نەقد)</option>
+                                <option value="غەیرە واسڵ">غەیرە واسڵ (قەرز)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="due-date-group" style="display: none;">
+                        <label>کاتی پارەدان (بەرواری دانەوەی قەرز)</label>
+                        <input type="date" id="due-date">
+                    </div>
+                    <button type="submit" class="btn">💾 تۆمارکردنی مامەڵە</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>لیستی کڕیاران و حسابات</h3>
+                <div class="filter-bar">
+                    <button type="button" class="filter-btn active" onclick="filterRecords('all', this)">هەمووی</button>
+                    <button type="button" class="filter-btn" onclick="filterRecords('غەیرە واسڵ', this)">غەیرە واسڵ (قەرز)</button>
+                    <button type="button" class="filter-btn" onclick="filterRecords('واسڵ', this)">واسڵکراو</button>
+                    <button type="button" class="filter-btn" onclick="filterRecords('overdue', this)">کاتی پارەدانی هاتووە</button>
