@@ -12,7 +12,6 @@
   --primary-dark:#022c22;
   --primary-light:#059669;
   --gold:#d97706;
-  --gold-soft:#fef3c7;
   --bg:#f1f5f9;
   --surface:#ffffff;
   --text:#0f172a;
@@ -25,7 +24,6 @@
 *{box-sizing:border-box;font-family:'Vazirmatn',sans-serif;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);padding-bottom:80px}
 
-/* Login Screen */
 #login-screen{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle at top right,#064e3b,#022c22);padding:20px
@@ -41,7 +39,6 @@ body{background:var(--bg);color:var(--text);padding-bottom:80px}
   box-shadow:0 10px 20px rgba(217,119,6,0.3)
 }
 
-/* Top Navigation */
 header{
   background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);padding:14px 24px;
@@ -61,7 +58,6 @@ header{
 }
 .d-tab.active{background:var(--primary);color:#fff}
 
-/* Layout & Cards */
 .container{max-width:1200px;margin:24px auto;padding:0 16px}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
 @media(max-width:850px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
@@ -87,7 +83,6 @@ header{
 }
 .card-title{font-size:1.05rem;font-weight:700;color:var(--primary-dark);display:flex;align-items:center;gap:8px}
 
-/* Map Controls */
 .map-search-bar{display:flex;gap:8px;margin-bottom:12px}
 #map{height:380px;width:100%;border-radius:14px;z-index:1;border:1px solid var(--border)}
 .map-footer{
@@ -95,7 +90,6 @@ header{
   margin-top:10px;font-size:.82rem;color:var(--muted);background:#f8fafc;padding:8px 12px;border-radius:10px
 }
 
-/* Forms & Buttons */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:550px){.form-grid{grid-template-columns:1fr}}
 label{display:block;font-size:.82rem;font-weight:600;margin-bottom:5px;color:#334155}
@@ -116,7 +110,6 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
 .btn-soft{background:#f1f5f9;color:var(--text);border:1px solid var(--border)}
 .btn-soft:hover{background:#e2e8f0}
 
-/* Records & Badges */
 .pills{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
 .pill{
   padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:#fff;
@@ -140,7 +133,6 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
   color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px
 }
 
-/* Mobile Bottom Nav */
 .mobile-nav{
   display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;
   border-top:1px solid var(--border);padding:8px 0;z-index:1000;justify-content:space-around
@@ -154,7 +146,6 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
 </head>
 <body>
 
-<!-- شاشەی چوونەژوورەوە -->
 <div id="login-screen">
   <div class="login-card">
     <div class="brand-emblem">د</div>
@@ -165,7 +156,6 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
   </div>
 </div>
 
-<!-- شاشەی سەرەکی سیستەم -->
 <div id="app-shell" class="hidden">
   <header>
     <div class="header-brand">
@@ -184,7 +174,6 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
   </header>
 
   <div class="container">
-    <!-- ئامارە سەرەکییەکان (KPIs) -->
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-top"><span class="kpi-label">کۆی پسوڵەکان</span><div class="kpi-icon" style="background:#e0f2fe;color:#0284c7">🧾</div></div>
@@ -204,12 +193,16 @@ input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0
       </div>
     </div>
 
-    <!-- تابی ١: خەریتەی زیرەکی عێراق و تۆمارکردنی فرۆش -->
     <div id="view-pos" class="view-section">
       <div class="workspace-grid">
-        <!-- خەریتەی عێراق -->
         <div class="card">
           <div class="card-header">
             <div class="card-title">🌍 خەریتەی زیرەکی عێراق (دیاریکردنی دوکان)</div>
             <div style="display:flex;gap:6px">
               <button type="button" class="btn btn-soft" style="padding:6px 10px;font-size:.78rem" onclick="toggleMapLayer()">🛰️ سەتەلایت / شەقام</button>
+              <button type="button" class="btn btn-gold" style="padding:6px 10px;font-size:.78rem" onclick="locateMe()">📍 شوێنی ئێستام</button>
+            </div>
+          </div>
+
+          <div class="map-search-bar">
+            <input id="map-query" placeholder="ناوی گەڕەک یان شار بنووسە (نموونە: هەڤاڵان هەولێر)..." onkeydown="if(event.key==='Enter')searchPlace()">
