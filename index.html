@@ -10,7 +10,7 @@
 *{box-sizing:border-box;font-family:'Vazirmatn',sans-serif;margin:0;padding:0}
 body{background:var(--bg);color:#1f2937;padding-bottom:40px}
 header{background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000}
-.l-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 12px;border-radius:6px}
+.l-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer}
 #login-screen{max-width:400px;margin:50px auto;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.1);text-align:center}
 .container{max-width:850px;margin:15px auto;padding:0 12px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
@@ -21,16 +21,16 @@ h3{color:var(--p);margin-bottom:10px;font-size:1rem;border-bottom:1px solid #eee
 label{display:block;font-size:.85rem;margin-bottom:3px;font-weight:700}
 input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font-size:.95rem}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn{width:100%;padding:11px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:700;margin-top:5px}
+.btn{width:100%;padding:11px;background:var(--p);color:#fff;border:none;border-radius:8px;font-weight:700;margin-top:5px;cursor:pointer}
 #map{height:300px;width:100%;border-radius:10px;z-index:1;margin:8px 0}
 .f-bar{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto}
-.f-btn{padding:5px 12px;border-radius:15px;border:1px solid var(--p);background:#fff;color:var(--p);white-space:nowrap;font-size:.8rem}
+.f-btn{padding:5px 12px;border-radius:15px;border:1px solid var(--p);background:#fff;color:var(--p);white-space:nowrap;font-size:.8rem;cursor:pointer}
 .f-btn.active{background:var(--p);color:#fff}
 .item{border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin-bottom:8px;background:#fafafa;border-right:5px solid var(--s)}
 .item.unpaid{border-right-color:var(--d)}
 .item.overdue{background:#fef2f2;border-color:#fecaca}
 .badge{padding:2px 8px;border-radius:5px;font-size:.75rem;color:#fff}
-.btn-sm{padding:5px 9px;font-size:.8rem;border-radius:6px;border:none;color:#fff;margin-left:5px;margin-top:6px}
+.btn-sm{padding:5px 9px;font-size:.8rem;border-radius:6px;border:none;color:#fff;margin-left:5px;margin-top:6px;cursor:pointer}
 .hidden{display:none!important}
 </style>
 </head>
@@ -38,10 +38,10 @@ input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font
 <div id="login-screen">
 <h2 style="color:var(--p);margin-bottom:8px">کارگەی چەرەزاتی دیمەن</h2>
 <p style="color:#666;font-size:.85rem;margin-bottom:15px">تکایە بە ئەکاونتی تایبەتی خۆت بچۆ ژوورەوە</p>
-<div class="fg"><label>ئیمەیڵ</label><input type="email" id="email" placeholder="diman@diman.com"></div>
-<div class="fg"><label>وشەی نهێنی</label><input type="password" id="pass" placeholder="******"></div>
+<div class="fg"><label>ئیمەیڵ</label><input type="email" id="email" value="diman@diman.com"></div>
+<div class="fg"><label>وشەی نهێنی</label><input type="password" id="pass" placeholder="وشەی نهێنی بنووسە"></div>
 <button type="button" class="btn" id="login-btn">چوونەژوورەوە</button>
-<p id="err" style="color:red;margin-top:10px;font-size:.85rem"></p>
+<p id="err" style="color:red;margin-top:10px;font-size:.85rem;font-weight:bold"></p>
 </div>
 
 <div id="app-screen" class="hidden">
@@ -110,11 +110,21 @@ if(u){document.getElementById('login-screen').classList.add('hidden');document.g
 else{document.getElementById('login-screen').classList.remove('hidden');document.getElementById('app-screen').classList.add('hidden');}
 });
 
-document.getElementById('login-btn').onclick=()=>{
-const e=document.getElementById('email').value.trim(),p=document.getElementById('pass').value;
-document.getElementById('err').innerText="چاوەڕێ بکە...";
-signInWithEmailAndPassword(auth,e,p).catch(er=>document.getElementById('err').innerText="هەڵە: "+er.code);
-};
+document.getElementById('login-btn').addEventListener('click', async () => {
+const e=document.getElementById('email').value.trim();
+const p=document.getElementById('pass').value;
+const errBox=document.getElementById('err');
+if(!e || !p){ errBox.innerText="تکایە ئیمەیڵ و پاسۆرد بنووسە"; return; }
+errBox.style.color="green";
+errBox.innerText="چاوەڕێ بکە، دەچێتە ژوورەوە...";
+try {
+  await signInWithEmailAndPassword(auth,e,p);
+} catch(er) {
+  errBox.style.color="red";
+  errBox.innerText="هەڵەی چوونەژوورەوە: " + er.message;
+}
+});
+
 document.getElementById('logout-btn').onclick=()=>signOut(auth);
 
 function initM(){if(map)return;map=L.map('map').setView([33.3152,44.3661],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);mLayer.addTo(map);map.on('click',e=>setL(e.latlng.lat,e.latlng.lng));}
@@ -125,19 +135,10 @@ document.getElementById('pstat').onchange=e=>document.getElementById('dd-grp').s
 document.getElementById('s-form').onsubmit=async e=>{
 e.preventDefault();const st=document.getElementById('pstat').value;
 await addDoc(collection(db,"sales"),{name:document.getElementById('cname').value,phone:document.getElementById('cphone').value,city:document.getElementById('ccity').value,item:document.getElementById('idesc').value,amount:Number(document.getElementById('amt').value),status:st,dueDate:st==='غەیرە واسڵ'?document.getElementById('ddate').value:'',lat,lng,addedBy:auth.currentUser.email,createdAt:new Date().toISOString()});
-document.getElementById('s-form').reset();document.getElementById('dd-grp').style.display='none';alert("تۆمارکرا!");
+document.getElementById('s-form').reset();document.getElementById('dd-grp').style.display='none';alert("بە سەرکەوتوویی تۆمارکرا!");
 };
 
 function loadR(){
 onSnapshot(query(collection(db,"sales"),orderBy("createdAt","desc")),s=>{
 recs=[];mLayer.clearLayers();let tp=0,tu=0;
 s.forEach(d=>{const i={id:d.id,...d.data()};recs.push(i);if(i.status==='واسڵ')tp+=i.amount;else tu+=i.amount;if(i.lat)mLayer.addLayer(L.marker([i.lat,i.lng]).bindPopup(`<b>${i.name}</b><br>${i.status}: ${i.amount}`));});
-document.getElementById('st-all').innerText=recs.length;document.getElementById('st-paid').innerText=tp.toLocaleString();document.getElementById('st-unpaid').innerText=tu.toLocaleString();render();
-});
-}
-
-window.flt=(f,b)=>{curF=f;document.querySelectorAll('.f-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');render();};
-document.getElementById('srch').oninput=render;
-
-function render(){
-const l=document.getElementById('list'),q=document.getElementById('srch').value.toLowerCase(),td=new Date().toISOString().split('T');l.innerHTML='';
