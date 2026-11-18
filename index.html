@@ -140,3 +140,4 @@ window.flt=(f,b)=>{curF=f;document.querySelectorAll('.f-btn').forEach(x=>x.class
 document.getElementById('srch').oninput=render;
 
 function render(){
+const l=document.getElementById('list'),q=document.getElementById('srch').value.toLowerCase(),td=new Date().toISOString().split('T');l.innerHTML='';
